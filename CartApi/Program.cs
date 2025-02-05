@@ -7,6 +7,7 @@ using CartApi.Config;
 using CartApi.Repository;
 using CartApi.Data.ValueObject;
 using CartApi.Messages;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -130,6 +131,7 @@ app.MapDelete("remove-coupon/{userId}", async (ICartRepository repository, strin
 
 app.MapPost("checkout", async (ICartRepository repository, CheckoutHeaderVO vo) =>
 {
+    if (vo?.UserId == null) return Results.BadRequest();
     var cart = await repository.FindCartByUserId(vo.UserId!);
     if (cart == null) return Results.NotFound();
     vo.CartDetails = cart.CartDetails;

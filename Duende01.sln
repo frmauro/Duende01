@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartApi", "CartApi\CartApi.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouponApi", "CouponApi\CouponApi.csproj", "{6A20E2FA-0EF7-4374-A510-93258BA471D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus", "MessageBus\MessageBus.csproj", "{A09A651E-A9F4-4D30-B4EE-E1D3B24FE0F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6A20E2FA-0EF7-4374-A510-93258BA471D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A20E2FA-0EF7-4374-A510-93258BA471D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A20E2FA-0EF7-4374-A510-93258BA471D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A09A651E-A9F4-4D30-B4EE-E1D3B24FE0F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A09A651E-A9F4-4D30-B4EE-E1D3B24FE0F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A09A651E-A9F4-4D30-B4EE-E1D3B24FE0F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A09A651E-A9F4-4D30-B4EE-E1D3B24FE0F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
