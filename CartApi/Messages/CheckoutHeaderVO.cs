@@ -1,10 +1,10 @@
 ﻿using CartApi.Data.ValueObject;
+using MessageBus;
 
 namespace CartApi.Messages;
 
-public class CheckoutHeaderVO
+public class CheckoutHeaderVO : BaseMessage
 {
-    public long Id { get; set; }
     public string? UserId { get; set; }
     public string CouponCode { get; set; } = "Empty";
     public decimal PurshaseAmount { get; set; }

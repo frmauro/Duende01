@@ -8,6 +8,7 @@ using CartApi.Repository;
 using CartApi.Data.ValueObject;
 using CartApi.Messages;
 using Microsoft.AspNetCore.Http.HttpResults;
+using CartApi.RabbitMQSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,6 +69,7 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddSingleton<IRabbitMQSender, RabbitMQSender>();
 
 var app = builder.Build();
 
@@ -129,14 +131,14 @@ app.MapDelete("remove-coupon/{userId}", async (ICartRepository repository, strin
 }).RequireAuthorization("ApiScope");
 
 
-app.MapPost("checkout", async (ICartRepository repository, CheckoutHeaderVO vo) =>
+app.MapPost("checkout", async (ICartRepository repository, IRabbitMQSender rabbitMQSender, CheckoutHeaderVO vo) =>
 {
     if (vo?.UserId == null) return Results.BadRequest();
     var cart = await repository.FindCartByUserId(vo.UserId!);
     if (cart == null) return Results.NotFound();
     vo.CartDetails = cart.CartDetails;
 
-    // TASK RabbitMQ logic comes here
+    await rabbitMQSender.SendMessageAsync(vo, "checkoutqueue");
 
     return Results.Ok(vo);
 }).RequireAuthorization("ApiScope");
