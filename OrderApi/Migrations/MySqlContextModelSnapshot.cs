@@ -98,7 +98,6 @@ namespace OrderApi.Migrations
                         .HasColumnName("email");
 
                     b.Property<string>("ExpiryMonthYear")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("expiry_month_year");
 

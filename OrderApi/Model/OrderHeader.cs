@@ -43,7 +43,7 @@ public class OrderHeader : BaseEntity
     public string CVV { get; set; }
 
     [Column("expiry_month_year")]
-    public string ExpiryMonthYear { get; set; }
+    public string? ExpiryMonthYear { get; set; }
 
     [Column("total_itens")]
     public int CartTotalItens { get; set; }

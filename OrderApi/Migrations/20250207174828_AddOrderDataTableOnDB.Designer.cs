@@ -12,7 +12,7 @@ using OrderApi.Model.Context;
 namespace OrderApi.Migrations
 {
     [DbContext(typeof(MySqlContext))]
-    [Migration("20250206205457_AddOrderDataTableOnDB")]
+    [Migration("20250207174828_AddOrderDataTableOnDB")]
     partial class AddOrderDataTableOnDB
     {
         /// <inheritdoc />
@@ -101,7 +101,6 @@ namespace OrderApi.Migrations
                         .HasColumnName("email");
 
                     b.Property<string>("ExpiryMonthYear")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("expiry_month_year");
 

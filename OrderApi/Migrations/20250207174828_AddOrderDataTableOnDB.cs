@@ -41,7 +41,7 @@ namespace OrderApi.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     cvv = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    expiry_month_year = table.Column<string>(type: "longtext", nullable: false)
+                    expiry_month_year = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     total_itens = table.Column<int>(type: "int", nullable: false),
                     payment_status = table.Column<bool>(type: "tinyint(1)", nullable: false)
