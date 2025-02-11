@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus", "MessageBus\Me
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderApi", "OrderApi\OrderApi.csproj", "{E6AA5A88-A99A-4253-98C6-1145AC709B45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentProcessor", "PaymentProcessor\PaymentProcessor.csproj", "{A763A7A2-2996-40D4-B8AF-DD7546E41834}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{E6AA5A88-A99A-4253-98C6-1145AC709B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6AA5A88-A99A-4253-98C6-1145AC709B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6AA5A88-A99A-4253-98C6-1145AC709B45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A763A7A2-2996-40D4-B8AF-DD7546E41834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A763A7A2-2996-40D4-B8AF-DD7546E41834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A763A7A2-2996-40D4-B8AF-DD7546E41834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A763A7A2-2996-40D4-B8AF-DD7546E41834}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

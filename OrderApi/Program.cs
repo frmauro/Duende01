@@ -2,7 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using OrderApi.MessageConsumer;
+using OrderApi.Messages;
 using OrderApi.Model.Context;
+using OrderApi.RabbitMQSender;
 using OrderApi.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,6 +66,8 @@ var dbContextBuilder = new DbContextOptionsBuilder<MySqlContext>();
 dbContextBuilder.UseMySql(connection, new MySqlServerVersion(new Version(5, 7)));
 builder.Services.AddSingleton(new OrderRepository(dbContextBuilder.Options));
 builder.Services.AddHostedService<RabbitMQCheckoutConsumer>();
+builder.Services.AddSingleton<IRabbitMQSender, RabbitMQSender>();
+
 
 var app = builder.Build();
 

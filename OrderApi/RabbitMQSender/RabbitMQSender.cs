@@ -1,11 +1,10 @@
-﻿using CartApi.Messages;
-using MessageBus;
+﻿using MessageBus;
+using OrderApi.Messages;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Channels;
 
-namespace CartApi.RabbitMQSender;
+namespace OrderApi.RabbitMQSender;
 
 public class RabbitMQSender : IRabbitMQSender
 {
@@ -13,6 +12,7 @@ public class RabbitMQSender : IRabbitMQSender
     private readonly string _password;
     private readonly string _userName;
     private IConnection _connection;
+    private bool _disposed;
 
     public RabbitMQSender()
     {
@@ -22,7 +22,7 @@ public class RabbitMQSender : IRabbitMQSender
     }
     public async Task SendMessageAsync(BaseMessage baseMessage, string queueName)
     {
-        await ManagerConnection();
+        await EnsureConnectionAsync();
         using var channel = await _connection.CreateChannelAsync();
         await channel.QueueDeclareAsync(queueName, false, false, false, arguments: null);
 
@@ -33,12 +33,12 @@ public class RabbitMQSender : IRabbitMQSender
     private byte[] GetMessageAsByteArray(BaseMessage message)
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
-        var json = JsonSerializer.Serialize<CheckoutHeaderVO>((CheckoutHeaderVO)message, options);
+        var json = JsonSerializer.Serialize<PaymentVO>((PaymentVO)message, options);
         var body = Encoding.UTF8.GetBytes(json);
         return body;
     }
 
-    private async Task<IConnection> CreateConnection()
+    private async Task<IConnection> CreateConnectionAsync()
     {
         try
         {
@@ -53,14 +53,35 @@ public class RabbitMQSender : IRabbitMQSender
         }
         catch (Exception ex)
         {
-            throw ex;
+            throw new InvalidOperationException("Could not create a connection to RabbitMQ", ex);
         }
     }
 
-    private async Task ManagerConnection()
+    private async Task EnsureConnectionAsync()
     {
         if (_connection == null)
-            _connection = await CreateConnection();
+        {
+            _connection = await CreateConnectionAsync();
+        }
     }
 
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _connection?.Dispose();
+            }
+            _disposed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }
+
+
