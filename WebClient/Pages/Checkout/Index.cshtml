@@ -3,6 +3,10 @@
 @{
 }
 
+@if (Model.ErrorMessage != null)
+{
+    <div class="alert alert-warning" role="alert">@Model.ErrorMessage</div>
+}
 
 @if (Model != null && Model?.CartVo?.CartDetails.Count() > 0)
 {

@@ -12,7 +12,7 @@ public class RabbitMQSender : IRabbitMQSender
     private readonly string _hostName;
     private readonly string _password;
     private readonly string _userName;
-    private IConnection _connection;
+    //private IConnection _connection;
 
     public RabbitMQSender()
     {
@@ -28,7 +28,7 @@ public class RabbitMQSender : IRabbitMQSender
             Password = _password,
             UserName = _userName
         };
-        _connection = await factory.CreateConnectionAsync();
+        using var _connection = await factory.CreateConnectionAsync();
         using var channel = await _connection.CreateChannelAsync();
         await channel.QueueDeclareAsync(queueName, false, false, false, arguments: null);
 

@@ -12,7 +12,7 @@ using OrderApi.Model.Context;
 namespace OrderApi.Migrations
 {
     [DbContext(typeof(MySqlContext))]
-    [Migration("20250207174828_AddOrderDataTableOnDB")]
+    [Migration("20250210150048_AddOrderDataTableOnDB")]
     partial class AddOrderDataTableOnDB
     {
         /// <inheritdoc />
@@ -83,7 +83,6 @@ namespace OrderApi.Migrations
                         .HasColumnName("total_itens");
 
                     b.Property<string>("CouponCode")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("coupon_code");
 

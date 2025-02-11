@@ -69,7 +69,20 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 builder.Services.AddSingleton<IRabbitMQSender, RabbitMQSender>();
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddUserAccessTokenHttpClient("couponApi", configureClient: client =>
+{
+    client.BaseAddress = new Uri("https://localhost:4450");
+});
+
+
+builder.Services.AddOpenIdConnectAccessTokenManagement();
+
+
 
 var app = builder.Build();
 
@@ -131,11 +144,22 @@ app.MapDelete("remove-coupon/{userId}", async (ICartRepository repository, strin
 }).RequireAuthorization("ApiScope");
 
 
-app.MapPost("checkout", async (ICartRepository repository, IRabbitMQSender rabbitMQSender, CheckoutHeaderVO vo) =>
+app.MapPost("checkout", async (ICartRepository repository, ICouponRepository couponRepository, IRabbitMQSender rabbitMQSender, CheckoutHeaderVO vo) =>
 {
     if (vo?.UserId == null) return Results.BadRequest();
     var cart = await repository.FindCartByUserId(vo.UserId!);
     if (cart == null) return Results.NotFound();
+
+    if (!string.IsNullOrEmpty(vo.CouponCode))
+    {
+        var coupon = await couponRepository.GetCoupon(vo.CouponCode);
+
+        if (vo.DiscountTotal != coupon.DiscountAmount)
+        {
+            return Results.StatusCode(412);
+        }
+    }
+
     vo.CartDetails = cart.CartDetails;
 
     await rabbitMQSender.SendMessageAsync(vo, "checkoutqueue");

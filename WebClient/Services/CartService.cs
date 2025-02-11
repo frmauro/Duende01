@@ -1,7 +1,4 @@
-﻿using IdentityModel.Client;
-using System.Net.Http.Headers;
-using System.Reflection;
-using WebClient.DTO;
+﻿using WebClient.DTO;
 using WebClient.Services.Interfaces;
 using WebClient.Utils;
 
@@ -72,13 +69,17 @@ public class CartService(IHttpClientFactory httpClientFactory) : ICartService
 
     }
 
-    public async Task<CartVO> Checkout(CartHeaderVO cartHeader)
+    public async Task<object> Checkout(CartHeaderVO cartHeader)
     {
         var _client = httpClientFactory.CreateClient("cartApi");
         //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _client.PostAsJson("https://localhost:7229/checkout", cartHeader);
         if (response.IsSuccessStatusCode)
             return await response.ReadContentAs<CartVO>();
+        else if (response.StatusCode.ToString().Equals("PreconditionFailed"))
+        {
+            return "Coupon price has changed, please confirm! ";
+        }
         else throw new Exception("Something went wrong when calling API");
     }
 

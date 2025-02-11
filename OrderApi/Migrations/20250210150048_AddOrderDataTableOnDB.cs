@@ -23,7 +23,7 @@ namespace OrderApi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     user_id = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    coupon_code = table.Column<string>(type: "longtext", nullable: false)
+                    coupon_code = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     purchase_amount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     discount_amount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),

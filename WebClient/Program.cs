@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Authentication;
 using WebClient.Services.Interfaces;
 using WebClient.Services;
-using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
