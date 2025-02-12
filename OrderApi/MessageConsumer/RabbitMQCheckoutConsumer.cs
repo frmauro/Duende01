@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using OrderApi.Messages;
 using OrderApi.Model;
+using OrderApi.RabbitMQSender;
 using OrderApi.Repository;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -10,7 +11,9 @@ using System.Text.Json;
 
 namespace OrderApi.MessageConsumer;
 
-public class RabbitMQCheckoutConsumer(OrderRepository repository) : BackgroundService
+public class RabbitMQCheckoutConsumer(
+    OrderRepository repository,
+    IRabbitMQSender rabbitMQSender) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -73,6 +76,19 @@ public class RabbitMQCheckoutConsumer(OrderRepository repository) : BackgroundSe
         try
         {
             await repository.AddOrder(order);
+
+            PaymentVO payment = new()
+            {
+                Name = order.FirstName + " " + order.LastName,
+                CardNumber = order.CardNumber,
+                CVV = order.CVV,
+                ExpiryMonthYear = order.ExpiryMonthYear,
+                OrderId = order.Id,
+                PurchaseAmount = order.PurchaseAmount,
+                Email = order.Email
+            };
+
+            await rabbitMQSender.SendMessageAsync(payment, "orderpaymentprocessqueue");
         }
         catch (Exception ex)
         {

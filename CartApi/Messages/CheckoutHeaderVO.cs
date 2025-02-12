@@ -6,7 +6,7 @@ namespace CartApi.Messages;
 public class CheckoutHeaderVO : BaseMessage
 {
     public string? UserId { get; set; }
-    public string CouponCode { get; set; } = "Empty";
+    public string CouponCode { get; set; } = "";
     public decimal PurshaseAmount { get; set; }
     public decimal DiscountTotal { get; set; }
     public string? FirstName { get; set; }

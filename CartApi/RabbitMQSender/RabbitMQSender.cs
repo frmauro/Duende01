@@ -22,7 +22,7 @@ public class RabbitMQSender : IRabbitMQSender
     }
     public async Task SendMessageAsync(BaseMessage baseMessage, string queueName)
     {
-        await ManagerConnection();
+        _connection = await CreateConnection();
         using var channel = await _connection.CreateChannelAsync();
         await channel.QueueDeclareAsync(queueName, false, false, false, arguments: null);
 
@@ -48,8 +48,7 @@ public class RabbitMQSender : IRabbitMQSender
                 Password = _password,
                 UserName = _userName
             };
-            using var connection = await factory.CreateConnectionAsync();
-            return connection;
+            return await factory.CreateConnectionAsync();
         }
         catch (Exception ex)
         {

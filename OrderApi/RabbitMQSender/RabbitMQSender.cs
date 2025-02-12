@@ -48,8 +48,8 @@ public class RabbitMQSender : IRabbitMQSender
                 Password = _password,
                 UserName = _userName
             };
-            using var connection = await factory.CreateConnectionAsync();
-            return connection;
+            _connection = await factory.CreateConnectionAsync();
+            return _connection;
         }
         catch (Exception ex)
         {
