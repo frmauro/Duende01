@@ -38,6 +38,13 @@ public class RabbitMQCheckoutConsumer(
             await channel.BasicAckAsync(evt.DeliveryTag, false);
         };
         await channel.BasicConsumeAsync("checkoutqueue", false, consumer);
+
+        // Mantém o serviço rodando enquanto a aplicação estiver ativa
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            await Task.Delay(1000, stoppingToken); // Evita loop infinito sem necessidade
+        }
+
     }
 
     private async Task ProcessOrder(CheckoutHeaderVO vo)

@@ -33,7 +33,7 @@ public class CartRepository : ICartRepository
     public async Task<bool> ClearCart(string userId)
     {
         var cartHeader = await _context.CartHeaders
-                        .FirstOrDefaultAsync(c => c.UserId == userId);
+                        .FirstOrDefaultAsync(c => c.UserId == userId) ?? new CartHeader();
         if (cartHeader != null)
         {
             _context.CartDetails
@@ -55,7 +55,15 @@ public class CartRepository : ICartRepository
         cart.CartDetails = _context.CartDetails
             .Where(c => c.CartHeaderId == cart.CartHeader.Id)
                 .Include(c => c.Product);
-        return _mapper.Map<CartVO>(cart);
+
+        if (cart.CartHeader != null)
+        {
+            return _mapper.Map<CartVO>(cart);
+        }
+        else
+        {
+            return new CartVO();
+        }
     }
 
     public async Task<bool> RemoveCoupon(string userId)

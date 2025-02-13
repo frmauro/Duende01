@@ -164,6 +164,8 @@ app.MapPost("checkout", async (ICartRepository repository, ICouponRepository cou
 
     await rabbitMQSender.SendMessageAsync(vo, "checkoutqueue");
 
+    await repository.ClearCart(vo.UserId!);
+
     return Results.Ok(vo);
 }).RequireAuthorization("ApiScope");
 

@@ -36,6 +36,12 @@ public class RabbitMQPaymentConsumer(
             await channel.BasicAckAsync(evt.DeliveryTag, false);
         };
         await channel.BasicConsumeAsync("orderpaymentprocessqueue", false, consumer);
+
+        // Mantém o serviço rodando enquanto a aplicação estiver ativa
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            await Task.Delay(1000, stoppingToken); // Evita loop infinito sem necessidade
+        }
     }
 
     private async Task ProcessPaymentAsync(PaymentMessage payment)

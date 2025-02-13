@@ -43,7 +43,7 @@ namespace WebClient.Pages.Product
 
             var response = await cartService.AddItemToCart(cart);
 
-            return Redirect("/Product/Index");
+            return Redirect("/Cart/Index");
         }
 
 
