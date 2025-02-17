@@ -10,6 +10,8 @@ namespace OrderApi.MessageConsumer;
 
 public class RabbitMQPaymentConsumer(OrderRepository _repository) : BackgroundService
 {
+    private const string exchangeName = "FanoutPaymentUpdateExchange";
+    string queueName = "";
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var factory = new ConnectionFactory
@@ -20,7 +22,9 @@ public class RabbitMQPaymentConsumer(OrderRepository _repository) : BackgroundSe
         };
         var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
-        await channel.QueueDeclareAsync(queue: "orderpaymentresultqueue", false, false, false, arguments: null);
+        await channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Fanout);
+        await channel.QueueDeclareAsync();
+        await channel.QueueBindAsync(queueName, exchangeName, "");
 
         stoppingToken.ThrowIfCancellationRequested();
         var consumer = new AsyncEventingBasicConsumer(channel);
@@ -31,7 +35,7 @@ public class RabbitMQPaymentConsumer(OrderRepository _repository) : BackgroundSe
             UpdatePaymentStatus(vo).GetAwaiter().GetResult();
             await channel.BasicAckAsync(evt.DeliveryTag, false);
         };
-        await channel.BasicConsumeAsync("orderpaymentresultqueue", false, consumer);
+        await channel.BasicConsumeAsync(queueName, false, consumer);
 
         // Mantém o serviço rodando enquanto a aplicação estiver ativa
         while (!stoppingToken.IsCancellationRequested)

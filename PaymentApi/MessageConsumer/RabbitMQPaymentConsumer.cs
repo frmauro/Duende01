@@ -58,7 +58,7 @@ public class RabbitMQPaymentConsumer(
         try
         {
        
-            await rabbitMQSender.SendMessageAsync(paymentResult, "orderpaymentresultqueue");
+            await rabbitMQSender.SendMessageAsync(paymentResult);
         }
         catch (Exception ex)
         {

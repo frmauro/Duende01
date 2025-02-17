@@ -12,6 +12,7 @@ public class RabbitMQSender : IRabbitMQSender
     private readonly string _password;
     private readonly string _userName;
     private IConnection _connection;
+    private const string exchangeName = "FanoutPaymentUpdateExchange";
     private bool _disposed;
 
     public RabbitMQSender()
@@ -20,14 +21,14 @@ public class RabbitMQSender : IRabbitMQSender
         _password = "guest";
         _userName = "guest";
     }
-    public async Task SendMessageAsync(BaseMessage baseMessage, string queueName)
+    public async Task SendMessageAsync(BaseMessage baseMessage)
     {
         await EnsureConnectionAsync();
         using var channel = await _connection.CreateChannelAsync();
-        await channel.QueueDeclareAsync(queueName, false, false, false, arguments: null);
+        await channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Fanout, durable: false);
 
         byte[] body = GetMessageAsByteArray(baseMessage);
-        await channel.BasicPublishAsync(exchange: "", routingKey: queueName, body: body);
+        await channel.BasicPublishAsync(exchange: exchangeName, "", body: body);
     }
 
     private byte[] GetMessageAsByteArray(BaseMessage message)
