@@ -19,7 +19,7 @@ public class ProductService(IHttpClientFactory httpClientFactory) : IProductServ
 
         //var AccessToken = await HttpContext.GetTokenAsync("access_token");
 
-        var content = await client.GetStringAsync("https://localhost:6001/product");
+        var content = await client.GetStringAsync("https://localhost:4480/product");
 
         var products = JsonSerializer.Deserialize<List<ProductVO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -30,7 +30,7 @@ public class ProductService(IHttpClientFactory httpClientFactory) : IProductServ
     public async Task<ProductVO> FindProductById(long id)
     {
         var client = httpClientFactory.CreateClient("apiClient");
-        var response = await client.GetAsync($"https://localhost:6001/product{id}");
+        var response = await client.GetAsync($"https://localhost:4480/product{id}");
         return await response.ReadContentAs<ProductVO>();
     }
 

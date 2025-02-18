@@ -16,7 +16,7 @@ public class CouponService(IHttpClientFactory httpClientFactory) : ICouponServic
     {
         var _client = httpClientFactory.CreateClient("cartApi");
         //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync($"https://localhost:4450/find-coupon/{code}");
+        var response = await _client.GetAsync($"https://localhost:4480/find-coupon/{code}");
         return await response.ReadContentAs<CouponVO>();
     }
 }

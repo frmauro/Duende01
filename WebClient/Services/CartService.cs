@@ -13,7 +13,7 @@ public class CartService(IHttpClientFactory httpClientFactory) : ICartService
     {
         var _client = httpClientFactory.CreateClient("cartApi");
         //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync($"https://localhost:7229/find-cart/{userId}");
+        var response = await _client.GetAsync($"https://localhost:4480/find-cart/{userId}");
         return await response.ReadContentAs<CartVO>();
     }
 
@@ -21,7 +21,7 @@ public class CartService(IHttpClientFactory httpClientFactory) : ICartService
     {
         var _client = httpClientFactory.CreateClient("cartApi");
         //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.PostAsJson("https://localhost:7229/add-cart", model);
+        var response = await _client.PostAsJson("https://localhost:4480/add-cart", model);
         if (response.IsSuccessStatusCode)
             return await response.ReadContentAs<CartVO>();
         else throw new Exception("Something went wrong when calling API");
@@ -41,7 +41,7 @@ public class CartService(IHttpClientFactory httpClientFactory) : ICartService
     {
         var _client = httpClientFactory.CreateClient("cartApi");
         //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.DeleteAsync($"https://localhost:7229/remove-cart/{cartId}");
+        var response = await _client.DeleteAsync($"https://localhost:4480/remove-cart/{cartId}");
         if (response.IsSuccessStatusCode)
             return await response.ReadContentAs<bool>();
         else throw new Exception("Something went wrong when calling API");
@@ -51,7 +51,7 @@ public class CartService(IHttpClientFactory httpClientFactory) : ICartService
     {
         var _client = httpClientFactory.CreateClient("cartApi");
         //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.PostAsJson("https://localhost:7229/apply-coupon", cart);
+        var response = await _client.PostAsJson("https://localhost:4480/apply-coupon", cart);
         if (response.IsSuccessStatusCode)
             return await response.ReadContentAs<bool>();
         else throw new Exception("Something went wrong when calling API");
@@ -62,7 +62,7 @@ public class CartService(IHttpClientFactory httpClientFactory) : ICartService
     public async Task<bool> RemoveCoupon(string? userId)
     {
         var _client = httpClientFactory.CreateClient("cartApi");
-        var response = await _client.DeleteAsync($"https://localhost:7229/remove-coupon/{userId}");
+        var response = await _client.DeleteAsync($"https://localhost:4480/remove-coupon/{userId}");
         if (response.IsSuccessStatusCode)
             return await response.ReadContentAs<bool>();
         else throw new Exception("Something went wrong when calling API");
@@ -73,7 +73,7 @@ public class CartService(IHttpClientFactory httpClientFactory) : ICartService
     {
         var _client = httpClientFactory.CreateClient("cartApi");
         //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.PostAsJson("https://localhost:7229/checkout", cartHeader);
+        var response = await _client.PostAsJson("https://localhost:4480/checkout", cartHeader);
         if (response.IsSuccessStatusCode)
             return await response.ReadContentAs<CartVO>();
         else if (response.StatusCode.ToString().Equals("PreconditionFailed"))
