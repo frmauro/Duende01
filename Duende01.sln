@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Email", "Email\Email.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{3B3DEA03-44BB-4B8D-8769-B934C877C02A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebClientUnitTest", "WebClientUnitTest\WebClientUnitTest.csproj", "{D15B0FF4-403A-44EC-8EA9-D763C4DE77E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{3B3DEA03-44BB-4B8D-8769-B934C877C02A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B3DEA03-44BB-4B8D-8769-B934C877C02A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B3DEA03-44BB-4B8D-8769-B934C877C02A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D15B0FF4-403A-44EC-8EA9-D763C4DE77E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D15B0FF4-403A-44EC-8EA9-D763C4DE77E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D15B0FF4-403A-44EC-8EA9-D763C4DE77E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D15B0FF4-403A-44EC-8EA9-D763C4DE77E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
