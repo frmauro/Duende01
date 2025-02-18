@@ -28,6 +28,21 @@ public class ProductServiceUnitTest
         _productService = new ProductService(_httpClientFactoryMock.Object);
     }
 
+    private void SetupHttpResponse(HttpStatusCode statusCode, string content)
+    {
+        _httpMessageHandlerMock.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>()
+            )
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = statusCode,
+                Content = new StringContent(content)
+            });
+    }
+
     [Fact]
     public async Task FindAllProducts_ReturnsProductList()
     {
@@ -37,18 +52,7 @@ public class ProductServiceUnitTest
             new ProductVO { Id = 1, Name = "Product1", Price = 10, Description = "Description1", CategoryName = "Category1", ImageURL = "URL1" },
             new ProductVO { Id = 2, Name = "Product2", Price = 20, Description = "Description2", CategoryName = "Category2", ImageURL = "URL2" }
         };
-        var responseContent = new StringContent(JsonSerializer.Serialize(productList));
-        _httpMessageHandlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>()
-            )
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = responseContent
-            });
+        SetupHttpResponse(HttpStatusCode.OK, JsonSerializer.Serialize(productList));
 
         // Act
         var result = await _productService.FindAllProducts();
@@ -56,32 +60,25 @@ public class ProductServiceUnitTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(2, result.Count());
+        Assert.Equal("Product1", result.First().Name);
     }
 
-    [Fact]
-    public async Task FindProductById_ReturnsProduct()
+    [Theory]
+    [InlineData(1, "Product1")]
+    [InlineData(2, "Product2")]
+    public async Task FindProductById_ReturnsProduct(long productId, string expectedName)
     {
         // Arrange
-        var product = new ProductVO { Id = 1, Name = "Product1", Price = 10, Description = "Description1", CategoryName = "Category1", ImageURL = "URL1" };
-        var responseContent = new StringContent(JsonSerializer.Serialize(product));
-        _httpMessageHandlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>()
-            )
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = responseContent
-            });
+        var product = new ProductVO { Id = productId, Name = expectedName, Price = 10, Description = "Description1", CategoryName = "Category1", ImageURL = "URL1" };
+        SetupHttpResponse(HttpStatusCode.OK, JsonSerializer.Serialize(product));
 
         // Act
-        var result = await _productService.FindProductById(1);
+        var result = await _productService.FindProductById(productId);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(1, result.Id);
+        Assert.Equal(productId, result.Id);
+        Assert.Equal(expectedName, result.Name);
     }
 
     [Fact]
@@ -89,18 +86,7 @@ public class ProductServiceUnitTest
     {
         // Arrange
         var product = new ProductVO { Id = 1, Name = "Product1", Price = 10, Description = "Description1", CategoryName = "Category1", ImageURL = "URL1" };
-        var responseContent = new StringContent(JsonSerializer.Serialize(product));
-        _httpMessageHandlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>()
-            )
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.Created,
-                Content = responseContent
-            });
+        SetupHttpResponse(HttpStatusCode.Created, JsonSerializer.Serialize(product));
 
         // Act
         var result = await _productService.CreateProduct(product);
@@ -108,6 +94,7 @@ public class ProductServiceUnitTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(1, result.Id);
+        Assert.Equal("Product1", result.Name);
     }
 
     [Fact]
@@ -115,18 +102,7 @@ public class ProductServiceUnitTest
     {
         // Arrange
         var product = new ProductVO { Id = 1, Name = "Product1", Price = 10, Description = "Description1", CategoryName = "Category1", ImageURL = "URL1" };
-        var responseContent = new StringContent(JsonSerializer.Serialize(product));
-        _httpMessageHandlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>()
-            )
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = responseContent
-            });
+        SetupHttpResponse(HttpStatusCode.OK, JsonSerializer.Serialize(product));
 
         // Act
         var result = await _productService.UpdateProduct(product);
@@ -134,23 +110,14 @@ public class ProductServiceUnitTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(1, result.Id);
+        Assert.Equal("Product1", result.Name);
     }
 
     [Fact]
     public async Task DeleteProductById_ReturnsTrue()
     {
         // Arrange
-        _httpMessageHandlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>()
-            )
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("true")
-            });
+        SetupHttpResponse(HttpStatusCode.OK, "true");
 
         // Act
         var result = await _productService.DeleteProductById(1);
