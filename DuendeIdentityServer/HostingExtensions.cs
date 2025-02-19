@@ -53,7 +53,7 @@ namespace Duende01
             builder.Services.AddRazorPages();
 
             var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
-            const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");// @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
 
             builder.Services.AddIdentityServer()
                 .AddConfigurationStore(options =>
